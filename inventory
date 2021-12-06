@@ -1,3 +1,5 @@
-mark@192.168.1.12
-mark@192.168.1.14
-workstation@192.168.1.13
+[servers]
+mark@192.168.1.6
+mark@192.168.1.7
+[workstation]
+192.168.1.13
