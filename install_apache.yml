@@ -6,26 +6,27 @@
   - name: update repository index
     apt:
       update_cache: yes
+    when: ansible_distribution == "Ubuntu"
 
-  - name: install apache2 package
-    apt:
-      name: apache2
+  - name: install apache2 package and add PHP support for apache Ubuntu and CentOS
+    package:
+      name: 
+        - "{{ apache_package }}"
+        - "{{ php_package }}"
+      state: latest
+      update_cache: yes
+    when: ansible_distribution in ["CentOS", "RedHat", "Ubuntu"]
 
-  - name: add PHP support for apache
-    apt:
-      name: libapache2-mod-php
+  - name: update repository index for CentOS
+    dnf:
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
 
-  - name: Install httpd webserver
-    yum: name=httpd state=present
-
-  - name: Runnning httpd
-    service: name=httpd state=started      
-
-  - name: Open port 80 http access
-    firewalld:
-      service: http
-      permanent: true
-      state: enabled
-
-  - name: Restart Firewall service. For firewall changes
-    service: name=firewalld state=restarted
+  - name: install apache2 package and add php packages for CentOS
+    dnf:
+      name: 
+        - httpd
+        - php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
